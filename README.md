@@ -206,21 +206,76 @@ OpenAI API가 작동하지 않을 경우, 미리 준비된 백업 문제들이 �
 
 ## 🌐 Streamlit Cloud 배포 가이드
 
-1. GitHub에 코드 푸시
+1. [Streamlit Cloud](https://share.streamlit.app)에 접속하여 GitHub 계정으로 로그인
 
-2. [Streamlit Cloud](https://share.streamlit.io) 접속
-   - GitHub 저장소 연결
-   - 새 앱 배포 선택
+2. "New app" 버튼 클릭 후 이 저장소 선택
+
+3. 앱 설정에서 다음 Secrets를 추가 (Settings > Secrets):
+   ```toml
+   [secrets]
+   OPENAI_API_KEY = "your-openai-api-key"
+   
+   # Firebase Admin SDK 자격 증명 (JSON 형식)
+   FIREBASE_CREDENTIALS = '''
+   {
+     "type": "service_account",
+     "project_id": "your-project-id",
+     "private_key_id": "your-private-key-id",
+     "private_key": "your-private-key",
+     "client_email": "your-client-email",
+     "client_id": "your-client-id",
+     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+     "token_uri": "https://oauth2.googleapis.com/token",
+     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+     "client_x509_cert_url": "your-cert-url"
+   }
+   '''
+   
+   # Firebase 웹 설정
+   FIREBASE_API_KEY = "your-api-key"
+   FIREBASE_AUTH_DOMAIN = "your-project-id.firebaseapp.com"
+   FIREBASE_PROJECT_ID = "your-project-id"
+   FIREBASE_STORAGE_BUCKET = "your-project-id.appspot.com"
+   FIREBASE_MESSAGING_SENDER_ID = "your-sender-id"
+   FIREBASE_APP_ID = "your-app-id"
+   FIREBASE_DATABASE_URL = "https://your-project-id.firebaseio.com"
+   ```
+
+4. "Deploy!" 버튼을 클릭하여 배포 시작
+
+## 💻 로컬에서 실행하기
+
+1. 저장소 클론:
+```bash
+git clone https://github.com/yourusername/ai-quiz-game.git
+cd ai-quiz-game
+```
+
+2. 필요한 패키지 설치:
+```bash
+pip install -r requirements.txt
+```
 
 3. 환경 변수 설정:
-   - Streamlit Cloud 대시보드의 앱 설정에서 다음 시크릿 추가:
-   ```
-   OPENAI_API_KEY=your_openai_api_key
-   ```
-   - Firebase 자격 증명을 JSON 형식으로 추가:
-   ```
-   FIREBASE_CREDENTIALS={"type": "service_account", ...}
-   ```
+- `.env` 파일을 생성하고 위의 Secrets와 동일한 변수들을 설정
+- Firebase Admin SDK 자격 증명 파일(`firebase-credentials.json`)을 프로젝트 루트에 저장
 
-4. 배포 시작
-   - Streamlit Cloud가 자동으로 앱을 빌드하고 배포 
+4. 앱 실행:
+```bash
+streamlit run app.py
+```
+
+## 🔥 Firebase 프로젝트 설정
+
+1. [Firebase Console](https://console.firebase.google.com/)에서 새 프로젝트 생성
+
+2. Authentication 설정:
+   - "Authentication" > "Sign-in method" 에서 이메일/비밀번호 로그인 활성화
+
+3. Firestore 설정:
+   - "Firestore Database" 생성
+   - 보안 규칙 설정
+
+4. 프로젝트 설정:
+   - 웹 앱 추가하여 Firebase 설정 정보 획득
+   - Admin SDK 비공개 키 생성 
